@@ -15,9 +15,7 @@
 [binding_model=by_value, include="flconsole.h"] class FLConsole {
   callback void ChangeCallback(std::string log);
   FLConsole();
-  std::string GetDefaultLogPath();
   std::string GetLogPath();
-  void SetLogPath(std::string path);
-  void Listen(ChangeCallback? changeCallback);
+  std::string Listen(ChangeCallback? changeCallback);
   void Close();
 };

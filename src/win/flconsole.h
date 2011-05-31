@@ -29,16 +29,11 @@ public:
 
   FLConsole();
   ~FLConsole();
-  
-  string GetDefaultLogPath();
   string GetLogPath();
-  void SetLogPath(string path);
-  void Listen(ChangeCallback* changeCallback);
+  string Listen(ChangeCallback* changeCallback);
   void Close();
 
 private:
-
-  string defaultLogPath;
   string logPath;
   ChangeCallback *changeCallback;
   UINT_PTR timerID;
@@ -49,7 +44,7 @@ private:
   void DetectMod();
   void OnChange();
   FILETIME GetModTime(string path);
-  string GetLog(string path);
+  string GetDiff(string path);
   string ConvertEncoding(string srcStr, string fromEnc, string toEnc);
 
 };

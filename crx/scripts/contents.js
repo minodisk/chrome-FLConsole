@@ -4,10 +4,8 @@ var FLConsole = (function (window) {
 
   var R_ERROR = /^(?:\s*Error|エラー|\d+).*\:/;
   var R_WARN = /(?:^(?:(?:Warning|警告).*\:|SecurityDomain)|^\*{3}.*\*{3}$)/;
-  var ZERO = Math.pow(10, 17);
 
   var hashMap = {};
-
   function setOutput(request, sender, sendResponse) {
     var tabID = request.tabID;
     var diff = request.diff;
@@ -21,8 +19,9 @@ var FLConsole = (function (window) {
       return 'log';
     };
 
+    var outputList = [];
     var rows = diff.split('\n');
-    var i, len, row, methodName, xmlStr, j, $xml;
+    var i, len, row, methodName, xmlStr, j, $xml, k;
     for (i = 0,len = rows.length; i < len; i++) {
       row = rows[i];
       methodName = detectMethodName(row);
@@ -32,32 +31,54 @@ var FLConsole = (function (window) {
           xmlStr += rows[j];
           $xml = $($.parseXML(xmlStr));
           if ($xml.find('parsererror').size() === 0) {
-            i = j;
-            for (j = 0; j < $xml.length; j++) {
-              response(sendResponse, tabID, methodName, $xml[j].firstChild);
+            for (k = 0; k < $xml.length; k++) {
+              outputList.push({
+                methodName: methodName,
+                data: $xml[k].firstChild
+              });
             }
+            i = j;
             break;
           }
         }
       } else if (methodName === 'error') {
-        var error = row;
         while ((i + 1) < len && rows[(i + 1)].indexOf('\t') === 0) {
           i++;
-          error += '\\n' + rows[i];
+          row += '\n' + rows[i].replace(/\t/g, '  ');
         }
-        response(sendResponse, tabID, methodName, error);
+        outputList.push({
+          methodName: methodName,
+          data: row
+        });
       } else {
-        response(sendResponse, tabID, methodName, row);
+        try {
+          row = JSON.parse(row);
+        } catch (err) {}
+        outputList.push({
+          methodName: methodName,
+          data: row
+        });
       }
     }
+
+    response(sendResponse, tabID, outputList);
   }
 
-  function response(sendResponse, tabID, methodName, data) {
-    var hash = (new Date()).getTime().toString() + (Math.random() * ZERO).toString();
-    hashMap[hash] = data;
+  function response(sendResponse, tabID, outputList) {
+    var i, len, output;
+    var methodNameList = [];
+    var dataList = [];
+    for (i = 0, len = outputList.length; i < len; i++) {
+      output = outputList[i];
+      methodNameList[i] = output.methodName;
+      dataList[i] = output.data;
+    }
+    var hash = (new Date()).getTime().toString() +
+      (Math.random() * 10000 >> 0).toString();
+    hashMap[hash] = dataList;
     sendResponse({
       tabID: tabID,
-      methodName: methodName,
+      methodNameList: methodNameList,
       hash: hash
     });
   }
@@ -65,11 +86,17 @@ var FLConsole = (function (window) {
   chrome.extension.onRequest.addListener(setOutput);
 
   return {
-    getOutput: function (hash) {
-      var data = hashMap[hash];
-      delete hashMap[hash];
+    getOutput: function (hash, index) {
+      var dataList = hashMap[hash];
+      var data = dataList[index];
+      if (index === dataList.length - 1) {
+        delete hashMap[hash];
+      }
       return data;
     }
   };
 
-})(window);
+}
+
+  )
+  (window);

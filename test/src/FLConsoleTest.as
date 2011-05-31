@@ -35,7 +35,7 @@ package  {
 			
 			_y = 10;
 			
-			_addLabel('good case');
+			_addLabel('Intended Case');
 			_addButton('trace(null);', function (e:MouseEvent):void {
 				trace(null);
 			});
@@ -60,8 +60,11 @@ package  {
 			_addButton('trace(new Date());', function (e:MouseEvent):void {
 				trace(new Date());
 			});
-			_addButton('trace(<data><book id="0123">text node</book></data>);', function (e:MouseEvent):void {
-				trace(<data><book id="0123">text node</book></data>);
+			_addButton('trace(<data><book id="0123">Flash</book></data>);', function (e:MouseEvent):void {
+				trace(<data><book id="0123">Flash</book></data>);
+			});
+			_addButton('trace((<data><book id="0001">ActionScript</book><book id="0002">JavaScript</book></data>).book);', function (e:MouseEvent):void {
+				trace((<data><book id="0001">ActionScript</book><book id="0002">JavaScript</book></data>).book);
 			});
 			_addButton('trace(JSON.encode({boolean: true, number: 3, string: "3", array: ["abc", new Date()]}));', function (e:MouseEvent):void {
 				trace(JSON.encode({boolean: true, number: 3, string: "3", array: ["abc", new Date()]}));
@@ -78,7 +81,7 @@ package  {
 			
 			_addSpace();
 			
-			_addLabel('bad case');
+			_addLabel('Unintended Case');
 			_addButton('race("3");', function (e:MouseEvent):void {
 				trace("3");
 			});
@@ -157,7 +160,7 @@ package  {
 	
 	internal class Label extends TextField {
 		
-		public function Label(str:String, size:int = 12, color:uint = 0xFFFFFF) {
+		public function Label(str:String, size:int = 11, color:uint = 0xFFFFFF) {
 			defaultTextFormat = new TextFormat('_sans', size, color, true);
 			autoSize = TextFieldAutoSize.LEFT;
 			multiline = false;

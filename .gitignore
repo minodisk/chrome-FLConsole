@@ -2,3 +2,4 @@ src/*.opensdf
 src/Debug/
 src/glue/
 src/ipch/
+src/Release/

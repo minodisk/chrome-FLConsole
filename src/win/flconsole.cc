@@ -30,7 +30,7 @@ FLConsole::FLConsole() {
   int i = userDir.find("\\Local Settings\\Application Data\\Google\\Chrome\\");
   userDir.replace(i, MAX_PATH, "");
 
-  this->defaultLogPath = this->logPath = userDir + "\\Application Data\\Macromedia\\Flash Player\\Logs\\flashlog.txt";
+  this->logPath = userDir + "\\Application Data\\Macromedia\\Flash Player\\Logs\\flashlog.txt";
   this->changeCallback = NULL;
 }
 
@@ -38,25 +38,25 @@ FLConsole::~FLConsole() {
   this->Close();
 }
 
-string FLConsole::GetDefaultLogPath() {
-  return this->defaultLogPath;
-}
-
 string FLConsole::GetLogPath() {
   return this->logPath;
 }
 
-void FLConsole::SetLogPath(string path) {
-  this->logPath = path;
-}
+string FLConsole::Listen(ChangeCallback* changeCallback) {
+  WIN32_FIND_DATA wfd;
+  HANDLE h = ::FindFirstFile(this->logPath.c_str(), &wfd);
+  if (h == INVALID_HANDLE_VALUE) {
+    return "NOT FOUND\n" + this->logPath;
+  }
+  ::FindClose(h);
 
-void FLConsole::Listen(ChangeCallback* changeCallback) {
   if (this->changeCallback == NULL) {
-    this->GetLog(this->logPath);
+    this->GetDiff(this->logPath);
     this->changeCallback = changeCallback;
     FLConsole::OnTimer((HWND)(-1), 0, (UINT_PTR)this, 0);
     this->timerID = ::SetTimer(NULL, 0, 100, OnTimer);
   }
+  return "SUCCESS";
 }
 
 void CALLBACK FLConsole::OnTimer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
@@ -72,18 +72,7 @@ void FLConsole::DetectMod() {
   FILETIME modTime = this->GetModTime(this->logPath);
   if (::CompareFileTime(&this->lastModTime, &modTime) != 0) {
     this->lastModTime = modTime;
-    this->OnChange();
-  }
-}
-
-void FLConsole::OnChange() {
-  this->changeCallback->Run(this->GetLog(this->logPath));
-}
-
-void FLConsole::Close() {
-  if (this->changeCallback != NULL) {
-    KillTimer(NULL, this->timerID);
-    this->changeCallback = NULL;
+    this->changeCallback->Run(this->GetDiff(this->logPath));
   }
 }
 
@@ -97,7 +86,7 @@ FILETIME FLConsole::GetModTime(string path) {
   return wfd.ftLastWriteTime;
 }
 
-string FLConsole::GetLog(string path) {
+string FLConsole::GetDiff(string path) {
   UINT row = 0;
   ifstream ifs(path);
   string str = "";
@@ -116,4 +105,11 @@ string FLConsole::GetLog(string path) {
   str.erase(str.length() - 1);
   lastModRow = row;
   return str;
+}
+
+void FLConsole::Close() {
+  if (this->changeCallback != NULL) {
+    KillTimer(NULL, this->timerID);
+    this->changeCallback = NULL;
+  }
 }
