@@ -6,6 +6,7 @@ package  {
 	import flash.display.StageQuality;
 	import flash.display.StageScaleMode;
 	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	
@@ -99,7 +100,7 @@ package  {
 			_errorButton.y = _y;
 			addChild(_errorButton);
 			
-			_y += 50;
+			_y += 30;
 		}
 		
 		private function _addLabel(str:String):void {
@@ -139,7 +140,7 @@ package  {
 			
 			var g:Graphics = graphics;
 			g.beginFill(0x333333);
-			g.drawRect(0, 0, 580, 40);
+			g.drawRect(0, 0, 580, 20);
 			g.endFill();
 			
 			var label:Label = new Label(str);

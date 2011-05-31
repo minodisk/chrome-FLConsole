@@ -16,7 +16,7 @@
     var attributes = {
       id:"FLConsoleTest"
     };
-    swfobject.embedSWF("flconsole_test.swf", "altContent", "600", "880",
+    swfobject.embedSWF("flconsole_test.swf", "altContent", "600", "560",
       "9.0.0", "expressInstall.swf", flashvars, params, attributes);
   </script>
   <style type="text/css">
@@ -25,9 +25,7 @@
       height      : 100%;
     }
     body {
-      margin            : 0;
-      display           : -webkit-box;
-      -webkit-box-align : center;
+      margin : 0;
     }
     #container {
       margin : 0 auto;
@@ -47,20 +45,19 @@
 </head>
 <body>
 <div id="container">
-  <div>
-    <h1>FLConsole Test</h1>
-    <div id="altContent">
-      <p><a href="http://www.adobe.com/go/getflashplayer"><img
-        src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif"
-        alt="Get Adobe Flash player"/></a></p>
-    </div>
-    <ol>
-      <li>Install Chrome extension "FLConsole".</li>
-      <li>Open console on developer tools.</li>
-      <li>Click Button on toolbar, and make "FLConsoleTest" active.</li>
-      <li>Click these button.</li>
-    </ol>
+  <h1>FLConsole Test</h1>
+
+  <div id="altContent">
+    <p><a href="http://www.adobe.com/go/getflashplayer"><img
+      src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif"
+      alt="Get Adobe Flash player"/></a></p>
   </div>
+  <ol>
+    <li>Install Chrome extension "FLConsole".</li>
+    <li>Open console on developer tools.</li>
+    <li>Click Button on toolbar, and make "FLConsoleTest" active.</li>
+    <li>Click these button.</li>
+  </ol>
 </div>
 </body>
 </html>
