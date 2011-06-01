@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <Windows.h>
+#include <sstream>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -26,15 +27,39 @@ FLObserver::FLObserver() {
   string userDir = currentDirName;
   int i = userDir.find("\\Local Settings\\Application Data\\Google\\Chrome\\");
   userDir.replace(i, MAX_PATH, "");
+  this->cfgPath = userDir + "\\mm.cfg";
   this->logPath = userDir + "\\Application Data\\Macromedia\\Flash Player\\Logs\\flashlog.txt";
-
   babel::init_babel();
 }
 
-void FLObserver::Init(JSCallback* onError, JSCallback* onChange) {
+string FLObserver::Init(JSCallback* onError, JSCallback* onChange) {
+  ifstream ifs(this->cfgPath);
+  ifs.seekg(0, fstream::end);
+  UINT endPos = ifs.tellg();
+  ifs.clear();
+  ifs.seekg(0, fstream::beg);
+  UINT begPos = ifs.tellg();
+  UINT size = endPos - begPos;
+  ifs.close();
+  if (size == 0) {
+    ofstream ofs(this->cfgPath);
+    ofs << "ErrorReportingEnable=1\nTraceOutputFileEnable=1\nMaxWarnings=100\nPolicyFileLog=1\nPolicyFileLogAppend=0" << endl;
+    ofs.close();
+  }
+
   FLObserver::OnTimer((HWND)(-1), 0, (UINT_PTR)this, 0);
   this->onError = onError;
   this->onChange = onChange;
+  
+  /*WIN32_FIND_DATA wfd;
+  HANDLE h = ::FindFirstFile(this->cfgPath.c_str(), &wfd);
+  if (h == INVALID_HANDLE_VALUE) {
+    this->onError->Run("NOT FOUND\n" + this->logPath);
+    return "";
+  }
+  ::FindClose(h);*/
+
+  return "";
 }
 
 FLObserver::~FLObserver() {

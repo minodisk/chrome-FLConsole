@@ -28,7 +28,7 @@ public:
   };
 
   FLObserver();
-  void Init(JSCallback* onError, JSCallback* onChange);
+  string Init(JSCallback* onError, JSCallback* onChange);
   ~FLObserver();
 
   string GetLogPath();
@@ -40,6 +40,7 @@ private:
   JSCallback *onChange;
   
   bool running;
+  string cfgPath;
   string logPath;
   UINT_PTR timerID;
   FILETIME lastModTime;

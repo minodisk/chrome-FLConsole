@@ -15,7 +15,7 @@
 [binding_model=by_value, include="flobserver.h"] class FLObserver {
   callback void JSCallback(std::string str);
   FLObserver();
-  void Init(JSCallback? onError, JSCallback? onChange);
+  std::string Init(JSCallback? onError, JSCallback? onChange);
   std::string GetLogPath();
   void Start();
   void Stop();

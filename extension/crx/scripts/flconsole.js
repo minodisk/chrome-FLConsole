@@ -16,7 +16,7 @@ var FLConsole = (function (window, document, chrome, swfobject) {
   function onDomContentLoaded() {
     var plugin = document.getElementById('flobserver');
     flobserver = plugin.FLObserver();
-    flobserver.init(onError, onChange);
+    console.log(flobserver.init(onError, onChange));
     autoStart();
   }
 
