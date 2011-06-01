@@ -1,5 +1,6 @@
-src/*.opensdf
-src/Debug/
-src/glue/
-src/ipch/
-src/Release/
+*.zip
+plugin/src/win/*.opensdf
+plugin/src/win/Debug/*
+plugin/src/win/glue/*
+plugin/src/win/ipch/*
+plugin/src/win/Release/*
