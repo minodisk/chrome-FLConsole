@@ -16,8 +16,12 @@
 #define FLOBSERVER_H
 
 #include <string>
+#include <boost\filesystem\path.hpp>
+#include <boost\filesystem\operations.hpp>
+#include <boost\filesystem\fstream.hpp>
 
 using namespace std;
+namespace fs = boost::filesystem;
 
 class FLObserver {
 
@@ -40,16 +44,15 @@ private:
   JSCallback *onChange;
   
   bool running;
-  string cfgPath;
-  string logPath;
+  fs::path cfgPath;
+  fs::path logPath;
   UINT_PTR timerID;
-  FILETIME lastModTime;
+  time_t lastModTime;
   UINT lastModRow;
 
   static void CALLBACK OnTimer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime);
-  void CheckBlankAndWrite(string path, string str);
+  void CheckBlankAndWrite(fs::path path, string text);
   void DetectMod();
-  FILETIME GetModTime(string path);
   string GetDiff(string path);
   string ConvertEncoding(string srcStr, string fromEnc, string toEnc);
 

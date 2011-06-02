@@ -15,20 +15,16 @@
 #include <Windows.h>
 #include <string>
 #include <iostream>
-#include <boost\filesystem.hpp>
 #include <fstream>
 #include "babel.h"
 #include "flobserver.h"
 
 FLObserver::FLObserver() {
   this->running = false;
-  char currentDirName[MAX_PATH];
-  GetCurrentDirectory(sizeof(currentDirName) / sizeof(currentDirName[0]), currentDirName);
-  string userDir = currentDirName;
-  int i = userDir.find("\\Local Settings\\Application Data\\Google\\Chrome\\");
-  userDir.replace(i, MAX_PATH, "");
-  this->cfgPath = userDir + "\\mm.cfg";
-  this->logPath = userDir + "\\Application Data\\Macromedia\\Flash Player\\Logs\\flashlog.txt";
+  fs::path currentPath = fs::current_path();
+  fs::path userPath = (currentPath / ".." / ".." / ".." / ".." / ".." / "..").normalize();
+  this->cfgPath = (userPath / "mm.cfg").normalize();
+  this->logPath = (userPath / "Application Data/Macromedia/Flash Player/Logs/flashlog.txt").normalize();
   babel::init_babel();
 }
 
@@ -43,17 +39,10 @@ bool FLObserver::Init(string mmcfg, JSCallback* onError, JSCallback* onChange) {
   return true;
 }
 
-void FLObserver::CheckBlankAndWrite(string path, string str) {
-  ifstream ifs(path);
-  ifs.seekg(0, fstream::end);
-  UINT endPos = ifs.tellg();
-  ifs.clear();
-  ifs.seekg(0, fstream::beg);
-  UINT begPos = ifs.tellg();
-  ifs.close();
-  if ((endPos - begPos) == 0) {
-    ofstream ofs(path);
-    ofs << str << endl;
+void FLObserver::CheckBlankAndWrite(fs::path path, string text) {
+  if (!fs::exists(path) ||  fs::file_size(path) != 0) {
+    fs::ofstream ofs(path);
+    ofs << text << endl;
     ofs.close();
   }
 }
@@ -63,19 +52,13 @@ FLObserver::~FLObserver() {
 }
 
 string FLObserver::GetLogPath() {
-  //return this->logPath;
-  using namespace boost::filesystem;
-  path currentPath = current_path();
-  path userPath = (currentPath / ".." / ".." / ".." / ".." / ".." / "..").normalize();
-  path cfgPath = (userPath / "mm.cfg").normalize();
-  path logPath = (userPath / "Application Data/Macromedia/Flash Player/Logs/flashlog.txt").normalize();
-  return logPath.string();
+  return this->logPath.string();
 }
 
 void FLObserver::Start() {
   if (!this->running) {
     this->running = true;
-    this->lastModTime = this->GetModTime(this->logPath);
+    this->lastModTime = fs::last_write_time(this->logPath);
     this->GetDiff(this->logPath);
     this->timerID = ::SetTimer(NULL, 0, 100, OnTimer);
   }
@@ -103,20 +86,6 @@ void FLObserver::DetectMod() {
     this->lastModTime = modTime;
     this->onChange->Run(this->GetDiff(this->logPath));
   }
-}
-
-FILETIME FLObserver::GetModTime(string path) {
-  WIN32_FIND_DATA wfd;
-  HANDLE h = ::FindFirstFile(path.c_str(), &wfd);
-  if (h == INVALID_HANDLE_VALUE) {
-    FILETIME time;
-    SYSTEMTIME st;
-    GetLocalTime(&st);
-    SystemTimeToFileTime(&st, &time);
-    return time;
-  }
-  ::FindClose(h);
-  return wfd.ftLastWriteTime;
 }
 
 string FLObserver::GetDiff(string path) {

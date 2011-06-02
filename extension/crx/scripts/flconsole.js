@@ -1,14 +1,14 @@
 var FLConsole = (function (window, document, chrome, swfobject) {
-  var isNavigatedToDL, active, flobserver, fpcapabilities;
+  var dlPageOpened, active, flobserver, fpcapabilities;
 
   console.log('FLConsole Status Log');
 
   function init() {
-    isNavigatedToDL = false;
+    console.log('-init');
+    dlPageOpened = false;
     disabled();
     if (!swfobject.hasFlashPlayerVersion('9')) {
-      throw new Error('Active Flash Player version is less than 9.');
-      openDLPage();
+      openDLPage('The version of active Flash Player is less than 9.');
     }
     window.addEventListener('DOMContentLoaded', function (e) {
       flobserver = document.getElementById('flobserver').FLObserver();
@@ -33,30 +33,29 @@ var FLConsole = (function (window, document, chrome, swfobject) {
       xhr.open('GET', chrome.extension.getURL('resources/mm.cfg'), true);
       xhr.send();
     }, false);
-    console.log('-init');
   }
 
   function onFPCapabilitiesReady() {
-    if (!fpcapabilities.isDebugger()) {
-      throw new Error('Active Flash Player is not debugger.');
-      openDLPage();
-    }
     console.log('-ready');
+    if (!fpcapabilities.isDebugger()) {
+      openDLPage('Active Flash Player is not debugger.');
+    }
     start();
     chrome.browserAction.onClicked.addListener(onButtonClicked);
   }
 
-  function openDLPage() {
-    if (!isNavigatedToDL) {
-      isNavigatedToDL = true;
+  function openDLPage(msg) {
+    console.log('-openDLPage');
+    if (!dlPageOpened) {
+      dlPageOpened = true;
       chrome.tabs.create({
           url: 'http://www.adobe.com/support/flashplayer/downloads.html'
         }, function (tab) {
-          alert('FPConsole requires Flash Debugger Player (version9 or above).\n' +
-            'Download and install from this page.');
+          alert(msg + '\n' +
+            'Download and install version9 or above debugger from this page.');
         });
-    console.log('-openDLPage');
     }
+    throw new Error(msg);
   }
 
   function start() {
