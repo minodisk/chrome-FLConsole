@@ -1,12 +1,14 @@
 var FLConsole = (function (window, document, chrome, swfobject) {
   var isNavigatedToDL, active, flobserver, fpcapabilities;
 
+  console.log('FLConsole Status Log');
+
   function init() {
     isNavigatedToDL = false;
     disabled();
     if (!swfobject.hasFlashPlayerVersion('9')) {
       throw new Error('Active Flash Player version is less than 9.');
-      openDownloadPage();
+      openDLPage();
     }
     window.addEventListener('DOMContentLoaded', function (e) {
       flobserver = document.getElementById('flobserver').FLObserver();
@@ -31,19 +33,20 @@ var FLConsole = (function (window, document, chrome, swfobject) {
       xhr.open('GET', chrome.extension.getURL('resources/mm.cfg'), true);
       xhr.send();
     }, false);
+    console.log('-init');
   }
 
   function onFPCapabilitiesReady() {
     if (!fpcapabilities.isDebugger()) {
       throw new Error('Active Flash Player is not debugger.');
-      openDownloadPage();
+      openDLPage();
     }
-    console.log('- ready');
+    console.log('-ready');
     start();
     chrome.browserAction.onClicked.addListener(onButtonClicked);
   }
 
-  function openDownloadPage() {
+  function openDLPage() {
     if (!isNavigatedToDL) {
       isNavigatedToDL = true;
       chrome.tabs.create({
@@ -52,18 +55,19 @@ var FLConsole = (function (window, document, chrome, swfobject) {
           alert('FPConsole requires Flash Debugger Player (version9 or above).\n' +
             'Download and install from this page.');
         });
+    console.log('-openDLPage');
     }
   }
 
   function start() {
-    console.log('- start');
+    console.log('-start');
     active = true;
     flobserver.start();
     chrome.browserAction.setIcon({path: 'images/icon_48_active.png'});
   }
 
   function stop() {
-    console.log('- stop');
+    console.log('-stop');
     active = false;
     flobserver.stop();
     chrome.browserAction.setIcon({path: 'images/icon_48_inactive.png'});
@@ -71,13 +75,14 @@ var FLConsole = (function (window, document, chrome, swfobject) {
 
   function disabled() {
     if (active) {
-      console.log('- disabled');
+      console.log('-disabled');
       stop();
     }
     chrome.browserAction.setIcon({path: 'images/icon_48_disable.png'});
   }
 
   function onButtonClicked(tab) {
+    console.log('-buttonClicked');
     if (!active) {
       start();
     } else {
@@ -86,7 +91,9 @@ var FLConsole = (function (window, document, chrome, swfobject) {
   }
 
   function onError(msg) {
+    console.log('-error');
     alert(msg);
+    disabled();
   }
 
   function onChange(diff) {
