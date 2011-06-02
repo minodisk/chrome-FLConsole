@@ -15,6 +15,7 @@
 #include <Windows.h>
 #include <string>
 #include <iostream>
+#include <boost\filesystem.hpp>
 #include <fstream>
 #include "babel.h"
 #include "flobserver.h"
@@ -62,10 +63,13 @@ FLObserver::~FLObserver() {
 }
 
 string FLObserver::GetLogPath() {
-  return this->logPath;
-  /*using namespace boost::filesystem;
-  path p = current_path();
-  return p.string();*/
+  //return this->logPath;
+  using namespace boost::filesystem;
+  path currentPath = current_path();
+  path userPath = (currentPath / ".." / ".." / ".." / ".." / ".." / "..").normalize();
+  path cfgPath = (userPath / "mm.cfg").normalize();
+  path logPath = (userPath / "Application Data/Macromedia/Flash Player/Logs/flashlog.txt").normalize();
+  return logPath.string();
 }
 
 void FLObserver::Start() {
