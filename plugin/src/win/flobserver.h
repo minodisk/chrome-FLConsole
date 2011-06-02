@@ -28,7 +28,7 @@ public:
   };
 
   FLObserver();
-  string Init(JSCallback* onError, JSCallback* onChange);
+  bool Init(string mmcfg, JSCallback* onError, JSCallback* onChange);
   ~FLObserver();
 
   string GetLogPath();
@@ -47,6 +47,7 @@ private:
   UINT lastModRow;
 
   static void CALLBACK OnTimer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime);
+  void CheckBlankAndWrite(string path, string str);
   void DetectMod();
   FILETIME GetModTime(string path);
   string GetDiff(string path);

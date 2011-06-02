@@ -1,49 +1,69 @@
 var FLConsole = (function (window, document, chrome, swfobject) {
-  var isDebugger, isNavigatedToDL, active, flobserver, fpcapabilities;
+  var isNavigatedToDL, active, flobserver, fpcapabilities;
 
   function init() {
-    isDebugger = false;
     isNavigatedToDL = false;
-    active = false;
     disabled();
-    window.addEventListener('DOMContentLoaded', onDomContentLoaded, false);
-    if (!checkVersion()) {
-      openDownloadTab();
+    if (!swfobject.hasFlashPlayerVersion('9')) {
+      throw new Error('Active Flash Player version is less than 9.');
+      openDownloadPage();
     }
-    chrome.browserAction.onClicked.addListener(onButtonClicked);
-  }
-
-  function onDomContentLoaded() {
-    var plugin = document.getElementById('flobserver');
-    flobserver = plugin.FLObserver();
-    console.log(flobserver.init(onError, onChange));
-    autoStart();
+    window.addEventListener('DOMContentLoaded', function (e) {
+      flobserver = document.getElementById('flobserver').FLObserver();
+      console.log(flobserver.getLogPath())
+      var xhr = new XMLHttpRequest();
+      xhr.addEventListener('readystatechange', function (e) {
+        if (xhr.readyState === 4) {
+          flobserver.init(xhr.responseText, onError, onChange);
+          swfobject.embedSWF('fpcapabilities.swf', 'fpcapabilities',
+            '0', '0', '9', 'expressInstall.swf', {
+              onReady: 'FLConsole.onFPCapabilitiesReady'
+            }, {
+              allowScriptAccess: 'always'
+            }, {}, function (result) {
+              if (!result.success) {
+                throw new Error('Fail to embed fpcapabilities.swf.');
+              }
+              fpcapabilities = result.ref;
+            });
+        }
+      }, false);
+      xhr.open('GET', chrome.extension.getURL('resources/mm.cfg'), true);
+      xhr.send();
+    }, false);
   }
 
   function onFPCapabilitiesReady() {
-    fpcapabilities = document.getElementById('fpcapabilities');
     if (!fpcapabilities.isDebugger()) {
-      openDownloadTab();
-    } else {
-      if (checkVersion()) {
-        autoStart();
-      }
+      throw new Error('Active Flash Player is not debugger.');
+      openDownloadPage();
     }
+    console.log('- ready');
+    start();
+    chrome.browserAction.onClicked.addListener(onButtonClicked);
   }
 
-  function autoStart() {
-    if (checkRequirement()) {
-      start();
+  function openDownloadPage() {
+    if (!isNavigatedToDL) {
+      isNavigatedToDL = true;
+      chrome.tabs.create({
+          url: 'http://www.adobe.com/support/flashplayer/downloads.html'
+        }, function (tab) {
+          alert('FPConsole requires Flash Debugger Player (version9 or above).\n' +
+            'Download and install from this page.');
+        });
     }
   }
 
   function start() {
+    console.log('- start');
     active = true;
     flobserver.start();
     chrome.browserAction.setIcon({path: 'images/icon_48_active.png'});
   }
 
   function stop() {
+    console.log('- stop');
     active = false;
     flobserver.stop();
     chrome.browserAction.setIcon({path: 'images/icon_48_inactive.png'});
@@ -51,20 +71,17 @@ var FLConsole = (function (window, document, chrome, swfobject) {
 
   function disabled() {
     if (active) {
+      console.log('- disabled');
       stop();
     }
     chrome.browserAction.setIcon({path: 'images/icon_48_disable.png'});
   }
 
   function onButtonClicked(tab) {
-    if (checkRequirement()) {
-      if (!active) {
-        start();
-      } else {
-        stop();
-      }
+    if (!active) {
+      start();
     } else {
-      disabled();
+      stop();
     }
   }
 
@@ -94,27 +111,6 @@ var FLConsole = (function (window, document, chrome, swfobject) {
             ');'
         }
       );
-    }
-  }
-
-  function checkRequirement() {
-    return flobserver && checkVersion() &&
-      fpcapabilities && fpcapabilities.isDebugger();
-  }
-
-  function checkVersion() {
-    return swfobject.getFlashPlayerVersion().major >= 9;
-  }
-
-  function openDownloadTab() {
-    if (!isNavigatedToDL) {
-      isNavigatedToDL = true;
-      chrome.tabs.create({
-          url: 'http://www.adobe.com/support/flashplayer/downloads.html'
-        }, function (tab) {
-          alert('FPConsole needs Flash Debugger Player (version9 or above).\n' +
-            'Download installer from this page.');
-        });
     }
   }
 

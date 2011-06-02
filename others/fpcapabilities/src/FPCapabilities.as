@@ -15,7 +15,7 @@ package  {
 		public function FPCapabilities() {
 			if (ExternalInterface.available) {
 				ExternalInterface.addCallback('isDebugger', _isDebugger);
-				ExternalInterface.call('FLConsole.onFPCapabilitiesReady');
+				ExternalInterface.call(loaderInfo.parameters.onReady);
 			}
 		}
 		

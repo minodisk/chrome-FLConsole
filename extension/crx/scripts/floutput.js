@@ -7,9 +7,9 @@ var FLOutput = (function (chrome) {
 
   var db = {};
 
-  function _save(request, sender, sendResponse) {
+  function save(request, sender, sendResponse) {
     var tabID = request.tabID;
-    var outputList = _parse(request.diff);
+    var outputList = parse(request.diff);
 
     var i, len, output;
     var methodNameList = [];
@@ -29,7 +29,7 @@ var FLOutput = (function (chrome) {
     });
   }
 
-  function _find(hash, index) {
+  function find(hash, index) {
     var dataList = db[hash];
     var data = dataList[index];
     if (index === dataList.length - 1) {
@@ -38,13 +38,15 @@ var FLOutput = (function (chrome) {
     return data;
   }
 
-  function _parse(diff) {
+  function parse(diff) {
     var outputs = [];
     var rows = diff.split('\n');
     var i, len, row, methodName, xmlStr, j, $xml, k;
     for (i = 0,len = rows.length; i < len; i++) {
       row = rows[i];
-      methodName = _detectMethodName(row);
+      methodName = (row.search(R_ERROR) !== -1) ? ERROR :
+                   (row.search(R_WARN)  !== -1) ? WARN :
+                                                  LOG;
       if (methodName === LOG && row.search('<') === 0) {
         xmlStr = '';
         for (j = i; j < len; j++) {
@@ -84,19 +86,10 @@ var FLOutput = (function (chrome) {
     return outputs;
   }
 
-  function _detectMethodName(row) {
-    if (row.search(R_ERROR) !== -1) {
-      return ERROR;
-    } else if (row.search(R_WARN) !== -1) {
-      return WARN;
-    }
-    return LOG;
-  }
-
-  chrome.extension.onRequest.addListener(_save);
+  chrome.extension.onRequest.addListener(save);
 
   return {
-    find: _find
+    find: find
   };
 
 })(chrome);
