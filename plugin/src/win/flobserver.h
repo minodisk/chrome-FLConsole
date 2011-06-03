@@ -16,9 +16,7 @@
 #define FLOBSERVER_H
 
 #include <string>
-#include <boost\filesystem\path.hpp>
-#include <boost\filesystem\operations.hpp>
-#include <boost\filesystem\fstream.hpp>
+#include <boost/filesystem/path.hpp>
 
 using namespace std;
 namespace fs = boost::filesystem;
@@ -32,29 +30,24 @@ public:
   };
 
   FLObserver();
-  bool Init(string mmcfg, JSCallback* onError, JSCallback* onChange);
   ~FLObserver();
 
   string GetLogPath();
-  void Start();
-  void Stop();
+
+  void Init(string mmcfg, JSCallback* onError, JSCallback* onChange);
+  void Reset();
+  void Tick();
 
 private:
-  JSCallback *onError;
-  JSCallback *onChange;
-  
-  bool running;
   fs::path cfgPath;
   fs::path logPath;
-  UINT_PTR timerID;
-  time_t lastModTime;
-  UINT lastModRow;
-
-  static void CALLBACK OnTimer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime);
+  JSCallback *jsOnError;
+  JSCallback *jsOnChange;
+  
+  uintmax_t lastFileSize;
+  unsigned int lastRow;
+  streamoff lastOff;
   void CheckBlankAndWrite(fs::path path, string text);
-  void DetectMod();
-  string GetDiff(string path);
-  string ConvertEncoding(string srcStr, string fromEnc, string toEnc);
 
 };
 

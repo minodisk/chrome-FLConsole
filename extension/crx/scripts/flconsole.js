@@ -1,5 +1,5 @@
 var FLConsole = (function (window, document, chrome, swfobject) {
-  var dlPageOpened, active, flobserver, fpcapabilities;
+  var dlPageOpened, running, intervalId, flobserver, fpcapabilities;
 
   console.log('FLConsole Status Log');
 
@@ -60,20 +60,31 @@ var FLConsole = (function (window, document, chrome, swfobject) {
 
   function start() {
     console.log('-start');
-    active = true;
-    flobserver.start();
+    running = true;
+    if (intervalId) {
+      clearInterval(intervalId);
+    }
+    flobserver.reset();
+    intervalId = setInterval(onTick, 100);
     chrome.browserAction.setIcon({path: 'images/icon_48_active.png'});
+  }
+
+  function onTick() {
+    flobserver.tick();
   }
 
   function stop() {
     console.log('-stop');
-    active = false;
-    flobserver.stop();
+    running = false;
+    if (intervalId) {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
     chrome.browserAction.setIcon({path: 'images/icon_48_inactive.png'});
   }
 
   function disabled() {
-    if (active) {
+    if (running) {
       console.log('-disabled');
       stop();
     }
@@ -82,7 +93,7 @@ var FLConsole = (function (window, document, chrome, swfobject) {
 
   function onButtonClicked(tab) {
     console.log('-buttonClicked');
-    if (!active) {
+    if (!running) {
       start();
     } else {
       stop();
@@ -96,6 +107,7 @@ var FLConsole = (function (window, document, chrome, swfobject) {
   }
 
   function onChange(diff) {
+    console.log(diff);
     chrome.windows.getLastFocused(function (window) {
       chrome.tabs.getSelected(window.id, function (tab) {
         chrome.tabs.sendRequest(tab.id, {
