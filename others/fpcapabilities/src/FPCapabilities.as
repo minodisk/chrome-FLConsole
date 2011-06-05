@@ -1,6 +1,5 @@
 package  {
 	import flash.display.Sprite;
-	import flash.events.TimerEvent;
 	import flash.external.ExternalInterface;
 	import flash.system.Capabilities;
 	

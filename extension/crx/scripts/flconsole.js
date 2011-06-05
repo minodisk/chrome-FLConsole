@@ -2,7 +2,6 @@ var FLConsole = (function (window, document, chrome, swfobject) {
   var dlPageOpened, running, intervalId, flobserver, fpcapabilities;
 
   console.log('FLConsole Status Log');
-
   function init() {
     console.log('-init');
     dlPageOpened = false;
@@ -12,22 +11,27 @@ var FLConsole = (function (window, document, chrome, swfobject) {
     }
     window.addEventListener('DOMContentLoaded', function (e) {
       flobserver = document.getElementById('flobserver').FLObserver();
-      console.log(flobserver.getLogPath())
+      console.log(flobserver.getMmcfgPath());
+      console.log(flobserver.getTrustcfgPath());
+      console.log(flobserver.getLogPath());
       var xhr = new XMLHttpRequest();
       xhr.addEventListener('readystatechange', function (e) {
         if (xhr.readyState === 4) {
-          flobserver.init(xhr.responseText, onError, onChange);
-          swfobject.embedSWF('fpcapabilities.swf', 'fpcapabilities',
-            '0', '0', '9', 'expressInstall.swf', {
-              onReady: 'FLConsole.onFPCapabilitiesReady'
-            }, {
-              allowScriptAccess: 'always'
-            }, {}, function (result) {
-              if (!result.success) {
-                throw new Error('Fail to embed fpcapabilities.swf.');
-              }
-              fpcapabilities = result.ref;
-            });
+          console.log(location);
+          if (flobserver.init(onError, onChange, location.origin, xhr.responseText)) {
+            swfobject.embedSWF('fpcapabilities.swf', 'fpcapabilities',
+              '100', '100', '9', 'expressInstall.swf', {
+                onReady: 'FLConsole.onFPCapabilitiesReady'
+              }, {
+                allowScriptAccess: 'always'
+              }, {
+              }, function (result) {
+                if (!result.success) {
+                  throw new Error('Fail to embed fpcapabilities.swf.');
+                }
+                fpcapabilities = result.ref;
+              });
+          }
         }
       }, false);
       xhr.open('GET', chrome.extension.getURL('resources/mm.cfg'), true);
@@ -102,12 +106,12 @@ var FLConsole = (function (window, document, chrome, swfobject) {
 
   function onError(msg) {
     console.log('-error');
-    alert(msg);
     disabled();
+    alert(msg);
+    throw new Error(msg);
   }
 
   function onChange(diff) {
-    console.log(diff);
     chrome.windows.getLastFocused(function (window) {
       chrome.tabs.getSelected(window.id, function (tab) {
         chrome.tabs.sendRequest(tab.id, {

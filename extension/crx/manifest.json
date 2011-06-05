@@ -1,7 +1,7 @@
 {
   "name": "FLConsole",
   "description": "Shows traces, warnings, and errors from SWF on the Console in Chrome Developer Tools.",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "icons": {
     "48": "images/icon_48.png",
     "128": "images/icon_128.png"

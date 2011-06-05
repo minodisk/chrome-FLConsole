@@ -14,9 +14,14 @@
 
 [binding_model=by_value, include="flobserver.h"] class FLObserver {
   callback void JSCallback(std::string str);
+  
   FLObserver();
-  void Init(std::string mmcfg, JSCallback? onError, JSCallback? onChange);
+  
+  std::string GetMmcfgPath();
+  std::string GetTrustcfgPath();
   std::string GetLogPath();
+
+  bool Init(JSCallback? onError, JSCallback? onChange, std::string url, std::string mmcfg);
   void Reset();
   void Tick();
 };
