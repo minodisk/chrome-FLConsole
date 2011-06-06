@@ -1,9 +1,10 @@
 var FLConsole = (function (window, document, chrome, swfobject) {
-  var dlPageOpened, running, intervalId, flobserver, fpcapabilities;
+  var extId, dlPageOpened, running, intervalId, flobserver, fpcapabilities;
 
   console.log('FLConsole Status Log');
   function init() {
     console.log('-init');
+    extId = location.host;
     dlPageOpened = false;
     disabled();
     if (!swfobject.hasFlashPlayerVersion('9')) {
@@ -17,8 +18,9 @@ var FLConsole = (function (window, document, chrome, swfobject) {
       var xhr = new XMLHttpRequest();
       xhr.addEventListener('readystatechange', function (e) {
         if (xhr.readyState === 4) {
-          console.log(location);
           if (flobserver.init(onError, onChange, location.origin, xhr.responseText)) {
+            location.reload();
+          } else {
             swfobject.embedSWF('fpcapabilities.swf', 'fpcapabilities',
               '100', '100', '9', 'expressInstall.swf', {
                 onReady: 'FLConsole.onFPCapabilitiesReady'
@@ -70,7 +72,7 @@ var FLConsole = (function (window, document, chrome, swfobject) {
     }
     flobserver.reset();
     intervalId = setInterval(onTick, 100);
-    chrome.browserAction.setIcon({path: 'images/icon_48_active.png'});
+    chrome.browserAction.setIcon({path: 'images/icon_19_active.png'});
   }
 
   function onTick() {
@@ -84,7 +86,7 @@ var FLConsole = (function (window, document, chrome, swfobject) {
       clearInterval(intervalId);
       intervalId = null;
     }
-    chrome.browserAction.setIcon({path: 'images/icon_48_inactive.png'});
+    chrome.browserAction.setIcon({path: 'images/icon_19_inactive.png'});
   }
 
   function disabled() {
@@ -92,7 +94,7 @@ var FLConsole = (function (window, document, chrome, swfobject) {
       console.log('-disabled');
       stop();
     }
-    chrome.browserAction.setIcon({path: 'images/icon_48_disable.png'});
+    chrome.browserAction.setIcon({path: 'images/icon_19_disable.png'});
   }
 
   function onButtonClicked(tab) {

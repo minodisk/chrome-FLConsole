@@ -1,14 +1,13 @@
 {
   "name": "FLConsole",
-  "description": "Shows traces, warnings, and errors from SWF on the Console in Chrome Developer Tools.",
-  "version": "0.0.5",
+  "description": "Shows traces, warnings, and errors from SWF on the console in Chrome Developer Tools.",
+  "version": "0.0.6",
   "icons": {
-    "48": "images/icon_48.png",
     "128": "images/icon_128.png"
   },
   "background_page": "background.html",
   "browser_action": {
-    "default_icon": "images/icon_48_disable.png",
+    "default_icon": "images/icon_19_disable.png",
     "default_title": "FLConsole"
   },
   "content_scripts": [
@@ -32,6 +31,7 @@
   ],
   "permissions": [
     "tabs",
+    "management",
     "<all_urls>"
   ]
 }

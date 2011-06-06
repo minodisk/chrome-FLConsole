@@ -27,20 +27,16 @@ public:
   void Tick();
 
 private:
-  fs::path currentPath;
-  fs::path userPath;
   fs::path mmcfgPath;
   fs::path trustcfgPath;
   fs::path logPath;
-  //fs::path extensionPath;
   JSCallback *jsOnError;
   JSCallback *jsOnChange;
   
   uintmax_t lastFileSize;
   unsigned int lastRow;
-  //streamoff lastOff;
 
-  bool WriteFile(fs::path path, string text);
+  bool GenerateFile(fs::path path, string text);
 
 };
 
