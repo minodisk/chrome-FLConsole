@@ -13,5 +13,6 @@ Chrome のコンソールに Flash Player からの出力を表示する拡張�
 * String 内に改行がある場合
 
 ## 使用しているライブラリ
-* (nixysa)[http://code.google.com/p/nixysa/] : NPAPI コード生成
-* (babel)[http://tricklib.com/cxx/ex/babel/] : 文字コード判定・自動変換
+* [boost](http://www.boost.org/) : 主に filesystem
+* [nixysa](http://code.google.com/p/nixysa/) : NPAPI コード生成
+* [babel](http://tricklib.com/cxx/ex/babel/) : 文字コード判定・自動変換
