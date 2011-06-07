@@ -1,0 +1,36 @@
+{
+  "name": "FLConsole",
+  "description": "Shows traces, warnings, and errors from SWF on the console in Chrome Developer Tools.",
+  "version": "0.0.7",
+  "icons": {
+    "128": "images/icon_128.png"
+  },
+  "background_page": "background.html",
+  "browser_action": {
+    "default_icon": "images/icon_19_disable.png",
+    "default_title": "FLConsole"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "file:///*",
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "scripts/jquery-1.6.min.js",
+        "scripts/floutput.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "plugins": [
+    {
+      "path": "plugins/flobserver.dll"
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "<all_urls>"
+  ]
+}

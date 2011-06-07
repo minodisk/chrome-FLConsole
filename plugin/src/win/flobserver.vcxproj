@@ -76,7 +76,7 @@
       <AdditionalLibraryDirectories>C:\lib\cpp\boost_1_46_1\stage\lib;</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y /I /F $(OutDir)$(TargetFileName) "$(ProjectDir)\..\..\..\extension\crx\plugins\"</Command>
+      <Command>xcopy /Y /I /F $(OutDir)$(TargetFileName) "$(ProjectDir)\..\..\..\crx\plugins\"</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy dll</Message>

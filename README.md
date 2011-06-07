@@ -16,3 +16,6 @@ Chrome のコンソールに Flash Player からの出力を表示する拡張�
 * [boost](http://www.boost.org/) : 主に filesystem
 * [nixysa](http://code.google.com/p/nixysa/) : NPAPI コード生成
 * [babel](http://tricklib.com/cxx/ex/babel/) : 文字コード判定・自動変換
+
+## 参考にしたサイト
+* [C++でGoogle Chromeのプラグインを書いてみた - おし、プログラミング](http://d.hatena.ne.jp/ichhi/20110306/1299434439")
