@@ -1,8 +1,6 @@
-#include <vector>
 #include <iostream>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/operations.hpp>
-#include <boost/range/algorithm/for_each.hpp>
 #include "babel.h"
 #include "flobserver.h"
 

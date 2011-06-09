@@ -55,8 +55,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,0,0,1
- PRODUCTVERSION 0,0,0,1
+ FILEVERSION 0,0,0,2
+ PRODUCTVERSION 0,0,0,2
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -72,13 +72,13 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "FileDescription", "Observes flashlog.txt."
-            VALUE "FileVersion", "0,0,0,1"
+            VALUE "FileVersion", "0,0,0,2"
             VALUE "InternalName", "flobserver"
             VALUE "LegalCopyright", "Copyright (C) 2011 minodisk.net"
             VALUE "MIMEType", "application/flobserver"
             VALUE "OriginalFilename", "flobserver.dll"
             VALUE "ProductName", "Flash Log Observer"
-            VALUE "ProductVersion", "0,0,0,1"
+            VALUE "ProductVersion", "0,0,0,2"
         END
     END
     BLOCK "VarFileInfo"
