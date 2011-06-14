@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FLConsole | Check List</title>
+  <link rel="stylesheet" href="http://minodisk.net/stylesheets/common.css"/>
+</head>
+<body>
+
+<div id="container">
+
+  <header>
+    <h1>Check List</h1>
+  </header>
+
+  <section>
+    <h2>1. Flash Player Setting</h2>
+
+    <p>Open this page <a href="http://kb2.adobe.com/cps/155/tn_15507.html"
+                         target="_blank">Find Flash Player version</a>, and
+       check
+       this list.</p>
+    <ol>
+      <li>Is the version of active Flash Player above 9 ?</li>
+      <li>Is Debug Player 'Yes' ?</li>
+    </ol>
+    <img src="images/find_flash_player_version.png"/>
+
+    <p>If not, install Debugger Player from
+      <a href="http://www.adobe.com/support/flashplayer/downloads.html"
+         target="_blank">Adobe Flash Player - Downloads</a>,
+       and make Debugger Player enabled from chrome://plugins/.
+    </p>
+    <img src="images/plugins.png"/>
+  </section>
+
+  <section>
+    <h2>2. FLConsole Setting</h2>
+    <ol>
+      <li>Do these files exist? These files are expected to be generated
+          by FLConsole.
+      </li>
+      <li>If these files exist, delete or move to somewhere else.</li>
+      <li>Restart Chrome.</li>
+    </ol>
+    <p>Vista/7</p>
+    <ul>
+      <li>C:\Users\{USER_NAME}\mm.cfg</li>
+      <li>C:\Users\{USER_NAME}\AppData\Roaming\Macromedia\Flash
+          Player\#Security\FlashPlayerTrust\FLConsole.cfg
+      </li>
+      <li>C:\Users\{USER_NAME}\AppData\Roaming\Macromedia\Flash
+          Player\Logs\flashlog.txt
+      </li>
+    </ul>
+    <p>XP</p>
+    <ul>
+      <li>C:\Documents and Settings\{USER_NAME}\mm.cfg</li>
+      <li>C:\Documents and Settings\{USER_NAME}\Application
+          Data\Macromedia\Flash Player\#Security\FlashPlayerTrust\FLConsole.cfg
+      </li>
+      <li>C:\Documents and Settings\{USER_NAME}\Application
+          Data\Macromedia\Flash Player\Logs\flashlog.txt
+      </li>
+    </ul>
+  </section>
+
+  <footer>(c) minodisk.net</footer>
+
+</div>
+
+</body>
+</html>
