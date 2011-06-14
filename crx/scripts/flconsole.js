@@ -58,7 +58,8 @@ var FLConsole = (function (window, document, chrome, swfobject) {
           url: 'http://www.adobe.com/support/flashplayer/downloads.html'
         }, function (tab) {
           alert(msg + '\n' +
-            'Download and install version9 or above debugger from this page.');
+            '1. Download and install version9 or above debugger from this page.\n' +
+            '2. And make debugger player active from chrome://plugins/.');
         });
     }
     throw new Error(msg);
