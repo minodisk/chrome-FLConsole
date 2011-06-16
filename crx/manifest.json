@@ -1,13 +1,14 @@
 {
-  "name": "FLConsole",
-  "description": "Shows Flash traces, warnings, and errors on the console in Chrome Developer Tools.",
+  "default_locale": "en",
+  "name": "__MSG_ext_name__",
+  "description": "__MSG_ext_description__",
   "version": "0.0.7",
   "icons": {
     "128": "images/icon_128.png"
   },
   "background_page": "background.html",
   "browser_action": {
-    "default_icon": "images/icon_19_disable.png",
+    "default_icon": "images/icon_19_inactive.png",
     "default_title": "FLConsole"
   },
   "content_scripts": [

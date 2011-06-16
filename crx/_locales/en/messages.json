@@ -1,0 +1,22 @@
+{
+  "ext_name": {
+    "message": "FLConsole",
+    "description": "Extension name."
+  },
+  "ext_description": {
+    "message": "Shows Flash traces, warnings, and errors on the console in Chrome Developer Tools.",
+    "description": "Extension description."
+  },
+  "bg_fp_lt9": {
+    "message": "Version of active Flash Player is less than 9.",
+    "description": "Background script message."
+  },
+  "bg_fp_notDebugger": {
+    "message": "Active Flash Player is not Debugger.",
+    "description": "Background script message."
+  },
+  "bg_fp_setting": {
+    "message": "\n\n1. Download and install version 9 or above Debugger Player from this page.\n2. Make pre-installed Player disabled and just installed Player enabled on chrome://plugins/.\n3. Restart Chrome.\n\nMore information : http://flconsole.minodisk.net/checklist/",
+    "description": "Background script message."
+  }
+}

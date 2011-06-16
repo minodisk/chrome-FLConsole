@@ -1,4 +1,8 @@
-var FLConsole = (function (window, document, chrome, swfobject) {
+var FLConsole = (function (window) {
+  var document = window.document;
+  var chrome = window.chrome;
+  var swfobject = window.swfobject;
+
   var extId, dlPageOpened, running, intervalId, flobserver, fpcapabilities;
 
   console.log('FLConsole Status Log');
@@ -8,7 +12,7 @@ var FLConsole = (function (window, document, chrome, swfobject) {
     dlPageOpened = false;
     disabled();
     if (!swfobject.hasFlashPlayerVersion('9')) {
-      openDLPage('The version of active Flash Player is less than 9.');
+      openDLPage(getMSG('fp_lt9'));
     }
     window.addEventListener('DOMContentLoaded', function (e) {
       flobserver = document.getElementById('flobserver').FLObserver();
@@ -44,7 +48,7 @@ var FLConsole = (function (window, document, chrome, swfobject) {
   function onFPCapabilitiesReady() {
     console.log('-ready');
     if (!fpcapabilities.isDebugger()) {
-      openDLPage('Active Flash Player is not debugger.');
+      openDLPage(getMSG('fp_notDebugger'));
     }
     start();
     chrome.browserAction.onClicked.addListener(onButtonClicked);
@@ -57,9 +61,7 @@ var FLConsole = (function (window, document, chrome, swfobject) {
       chrome.tabs.create({
           url: 'http://www.adobe.com/support/flashplayer/downloads.html'
         }, function (tab) {
-          alert(msg + '\n' +
-            '1. Download and install version9 or above debugger from this page.\n' +
-            '2. And make debugger player active from chrome://plugins/.');
+          alert(msg + getMSG('fp_setting'));
         });
     }
     throw new Error(msg);
@@ -74,6 +76,7 @@ var FLConsole = (function (window, document, chrome, swfobject) {
     flobserver.reset();
     intervalId = setInterval(onTick, 100);
     chrome.browserAction.setIcon({path: 'images/icon_19_active.png'});
+    chrome.browserAction.setBadgeText({text: ''});
   }
 
   function onTick() {
@@ -88,6 +91,7 @@ var FLConsole = (function (window, document, chrome, swfobject) {
       intervalId = null;
     }
     chrome.browserAction.setIcon({path: 'images/icon_19_inactive.png'});
+    chrome.browserAction.setBadgeText({text: ''});
   }
 
   function disabled() {
@@ -95,7 +99,8 @@ var FLConsole = (function (window, document, chrome, swfobject) {
       console.log('-disabled');
       stop();
     }
-    chrome.browserAction.setIcon({path: 'images/icon_19_disable.png'});
+    chrome.browserAction.setIcon({path: 'images/icon_19_inactive.png'});
+    chrome.browserAction.setBadgeText({text: 'x'});
   }
 
   function onButtonClicked(tab) {
@@ -139,10 +144,14 @@ var FLConsole = (function (window, document, chrome, swfobject) {
     }
   }
 
+  function getMSG(key) {
+    return chrome.i18n.getMessage('bg_' + key);
+  }
+
   init();
 
   return {
     onFPCapabilitiesReady: onFPCapabilitiesReady
   };
 
-})(window, document, chrome, swfobject);
+})(window);

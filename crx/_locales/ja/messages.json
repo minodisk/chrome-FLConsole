@@ -1,0 +1,22 @@
+{
+  "ext_name": {
+    "message": "FLConsole",
+    "description": "拡張の名称。"
+  },
+  "ext_description": {
+    "message": "Flash のトレース・警告・エラーを Chrome デベロッパーツールのコンソールに出力します。",
+    "description": "拡張の説明。"
+  },
+  "bg_fp_lt9": {
+    "message": "バージョン9未満の Flash Player が検出されました。",
+    "description": "バックグランドからのメッセージ。"
+  },
+  "bg_fp_notDebugger": {
+    "message": "デバッガではない Flash Player が検出されました。",
+    "description": "バックグランドからのメッセージ。"
+  },
+  "bg_fp_setting": {
+    "message": "\n\n1. このページからバージョン9以上の Flash Debugger Player をダウンロードし、インストールして下さい。\n2. chrome://plugins/ でプリインスールされている Player を無効に、新しくインストールした Flash Player を 有効にして下さい。\n3. Chrome を再起動して下さい。\n\nうまくいかない場合 : http://flconsole.minodisk.net/checklist/",
+    "description": "バックグランドからのメッセージ。"
+  }
+}
